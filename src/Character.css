@@ -1,0 +1,72 @@
+.character {
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    height: 100px;
+
+    position: relative;
+    display: inline-block;
+    flex: 1 1 calc(100% / 5 - 0.4em);
+    border: 0.1em solid black;
+    background-color: black;
+}
+
+.character > picture {
+    width: 100%;
+    height: 100%;
+}
+
+.character > picture > source,
+.character > picture > img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.character > picture > .characterName {
+    display: none;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: ghostwhite;
+    color: black;
+    font-size: 1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.character > picture > .characterName > span {
+    position: relative;
+    display: inline-block;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.character:hover .characterName {
+    display: block;
+}
+
+@media only screen and (max-width: 500px) {
+    .character > picture > .characterName {
+        font-size: 0.8em;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .character > picture > .characterName {
+        font-size: 0.6em;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .character > picture > .characterName {
+        font-size: 0.4em;
+    }
+}
