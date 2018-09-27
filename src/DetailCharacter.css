@@ -1,0 +1,113 @@
+#mainCharacter {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 67vh;
+}
+
+#mainInformation {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 50%;
+
+    border: 0.1em solid black;
+}
+
+#mainPicture {
+    margin: 0;
+    padding: 0;
+    width: 33%;
+    height: 100%;
+
+    vertical-align:top;
+    display: inline-block;
+
+    border: 0.2em solid black;
+}
+
+#mainPicture > picture {
+    width: 100%;
+    height: 100%;
+}
+
+#mainPicture > picture > img {
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#mainIdentity {
+    margin: 0;
+    padding: 0;
+    width: 67%;
+    height: 100%;
+
+    vertical-align: top;
+    display: inline-block;
+
+    border: 0.2em solid black;
+}
+
+#mainCharacterName {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 20%;
+
+    font-size: calc(4vw);
+    font-weight: bold;
+    color: white;
+    background-color: #FF4136;
+    display: flex;
+
+    border-bottom: 0.2em solid black;
+}
+
+@media only screen and (min-width: 800px) {
+    #mainCharacterName {
+        font-size: 2.3em;
+    }
+}
+
+#mainCharacterName span {
+    margin: auto;
+}
+
+#mainCharacterDescription {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 80%;
+
+    font-size: calc(4vw);
+    overflow: auto;
+    text-align: justify;
+    background-color: white;
+}
+
+@media only screen and (min-width: 400px) {
+    #mainCharacterDescription {
+        font-size: 1.15em;
+    }
+}
+
+#mainDetail {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 50%;
+
+    border: 0.2em solid black;
+}
+
+#mainDetailList {
+    margin: 1em auto;
+    padding: 0;
+    width: 98%;
+    height: 90%;
+
+    overflow: auto;
+}

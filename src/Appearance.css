@@ -1,0 +1,52 @@
+.appearance {
+    padding: 0;
+    margin-right: 1em;
+    margin-left: 1em;
+    width: 120px;
+    height: 100%;
+
+    position: relative;
+    display: inline-block;
+}
+
+.appearance > .pictureAppearance {
+    padding: 0.2em;
+    border: 0.5em solid black;
+
+    width: 100%;
+    height: 78%;
+}
+
+.appearance > .isComics {
+    background-color: deepskyblue;
+}
+
+.appearance > .isSeries {
+    background-color: coral;
+}
+
+.appearance > .pictureAppearance > picture > source,
+.appearance > .pictureAppearance > picture > img {
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.appearance > .nameAppearance {
+    padding-bottom: 1em;
+    margin: 0;
+    width: 100%;
+    height: 22%;
+
+    border: 0.1em solid black;
+
+    color: white;
+    background-color: black;
+    overflow-y: auto;
+
+    font-size: 0.8em;
+    text-align: center;
+    white-space: pre-wrap;
+    display: flex;
+}

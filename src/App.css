@@ -1,8 +1,8 @@
 #marvel {
-    margin: auto;
+    margin: 0;
     padding: 0;
     width: auto;
-    height: 500px;
+    height: auto;
 
-    border: solid black 5px;
+    background-color: black;
 }
