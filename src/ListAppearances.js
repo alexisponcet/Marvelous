@@ -16,7 +16,7 @@ const ListAppearances = ({ appearances, onClickAppearance }) => (
 						title={appearance.title}
 						picture={appearance.picture}
 						isComics={appearance.isComics}
-						listCharacters={appearance.listCharacters}
+						urlCharacters={appearance.urlCharacters}
 						onClick={onClickAppearance}
 						key={appearance.id}
 					/>
@@ -31,8 +31,8 @@ ListAppearances.propTypes = {
 			id: PropTypes.number.isRequired,
 			title: PropTypes.string.isRequired,
 			picture: PropTypes.string,
-			listCharacters: PropTypes.string,
 			isComics: PropTypes.bool,
+			urlCharacters: PropTypes.string,
 		})
 	),
 	onClickAppearance: PropTypes.func.isRequired,

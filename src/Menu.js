@@ -5,7 +5,7 @@ import './Menu.css';
 const Menu = () => (
 	<div id='menu'>
 		<picture>
-			<img src={MarvelImage} />
+			<img src={MarvelImage} alt ='Marvel'/>
 		</picture>
 	</div>
 )

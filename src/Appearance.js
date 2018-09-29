@@ -3,12 +3,12 @@ import './Appearance.css';
 
 import PropTypes from 'prop-types';
 
-const Appearance = ({ id, title, picture, isComics, listCharacters, onClick }) => (
+const Appearance = ({ id, title, picture, isComics, urlCharacters, onClick }) => (
 	<div className='appearance'>
 		<div className={isComics ? 'isComics pictureAppearance' : 'isSeries pictureAppearance'}>
 			<picture>
 				{/**<source media='(max-width: 100px)' srcSet={picture}/>**/}
-				<img src={picture} alt={title} onClick={() => onClick(listCharacters)}/>
+				<img src={picture} alt={title} onClick={() => onClick(urlCharacters)}/>
 			</picture>
 		</div>
 		<div className='nameAppearance'>
@@ -22,7 +22,7 @@ Appearance.propTypes = {
 	title: PropTypes.string.isRequired,
 	picture: PropTypes.string,
 	isComics: PropTypes.bool,
-	listCharacters: PropTypes.string,
+	urlCharacters: PropTypes.string,
 	onClick: PropTypes.func.isRequired,
 }
 

@@ -1,9 +1,23 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { compose } from 'redux';
+import { withHandlers } from 'recompose';
+import { withFirestore } from 'react-redux-firebase';
 
 import './DetailCharacter.css';
-import {API_KEY} from './App';
 import ListAppearances from './ListAppearances';
 import PropTypes from 'prop-types';
+
+
+const enhance = compose(
+	withFirestore, // Add props.firestore
+	withHandlers({
+		addFavoriteCharacter: ({ firestore, character }) => () =>
+			firestore.set({ collection: 'favoriteCharacters', doc: character.id.toString()}, { character }),
+		deleteFavoriteCharacter: ({ firestore, character }) => () =>
+			firestore.delete({ collection: 'favoriteCharacters', doc: character.id.toString() })
+	})
+)
+
 
 class DetailCharacter extends Component {
 
@@ -18,15 +32,25 @@ class DetailCharacter extends Component {
 				picture: PropTypes.string,
 				linkComics: PropTypes.string,
 				linkSeries: PropTypes.string,
+				isFavorite: PropTypes.bool,
 			}),
-		displayInfoAppearance: PropTypes.func.isRequired,
+		onClickAppearance: PropTypes.func.isRequired,
+		onClickFavoriteStar: PropTypes.func.isRequired,
+		firestore: PropTypes.shape({ // from enhance (withFirestore)
+			set: PropTypes.func.isRequired,
+			delete: PropTypes.func.isRequired
+		}),
+		addFavoriteCharacter: PropTypes.func.isRequired, // from enhance
+		// (withHandlers)
+		deleteFavoriteCharacter: PropTypes.func.isRequired, // from enhance (withHandlers)
 	}
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
-			idCharacter: 0,
-			comicsAndSeries: []
+			isFavorite: this.props.character.isFavorite,
+			comicsAndSeries: [],
 		}
 		this.didSeries = false;
 		this.didComics = false;
@@ -37,39 +61,38 @@ class DetailCharacter extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.state.idCharacter !== nextProps.character.id &&
-		 this.state.idCharacter !== 0) {
-			this.setState({ idCharacter: 0, comicsAndSeries: []});
+		if (this.props.character.id !== nextProps.character.id &&
+		 this.props.character.id !== 0) {
+			this.setState({
+				isFavorite: nextProps.character.isFavorite,
+				comicsAndSeries: [],
+			});
 			this.didComics = false;
 			this.didComics = false;
 		}
 		this.updateComicsAndSeries(nextProps);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return (nextState.idCharacter !== 0);
-	}
-
 	updateComicsAndSeries = (nextProps) => {
-		const {id, linkComics, linkSeries} = nextProps.character;
+		const { linkComics, linkSeries} = nextProps.character;
 
 		if (this.didComics && this.didSeries)
 			return;
 
 		if (!this.didComics) {
 			this.didComics = true;
-			this.callAPIMarvel(linkComics, id, true);
+			this.callAPIMarvel(linkComics, true);
 		}
 
 		if (!this.didSeries) {
 			this.didSeries = true;
-			this.callAPIMarvel(linkSeries, id, false);
+			this.callAPIMarvel(linkSeries, false);
 		}
 	}
 
-	callAPIMarvel = (url, id, isComics) => {
-		window.document.body.style.cursor = "wait";
-		fetch(`${url}?apikey=${API_KEY}`, {
+	callAPIMarvel = (url, isComics) => {
+		window.document.body.style.cursor = 'wait';
+		fetch(`${url}?apikey=${process.env.REACT_APP_MARVEL_API_KEY}`, {
 			method: 'GET',
 			headers: {
 				'Accept-encoding': 'gzip',
@@ -78,16 +101,16 @@ class DetailCharacter extends Component {
 		.then(result => result.json())
 		.then(
 			(result) => {
-				window.document.body.style.cursor = "default";
-				this.getComicsOrSeries(result.data.results, id, isComics);
+				window.document.body.style.cursor = 'default';
+				this.getComicsOrSeries(result.data.results, isComics);
 			},
 			(error) => {
-				window.document.body.style.cursor = "default";
+				window.document.body.style.cursor = 'default';
 				alert("Error while getting marvel series data : " + error);
 			})
 	}
 
-	getComicsOrSeries = (data, id, isComics) => {
+	getComicsOrSeries = (data, isComics) => {
 		let listComicsAndSeries = [];
 		let newComicsAndSeries = {};
 
@@ -97,18 +120,35 @@ class DetailCharacter extends Component {
 				title : d.title,
 				picture : d.thumbnail.path + "." +
 					d.thumbnail.extension,
-				listCharacters: d.characters.collectionURI,
+				urlCharacters: d.characters.collectionURI,
 			}
 			newComicsAndSeries.isComics = isComics;
 			listComicsAndSeries.push(newComicsAndSeries);
 		})
-		this.setState(prevState => ({ idCharacter : id,
-			comicsAndSeries: [...prevState.comicsAndSeries, ...listComicsAndSeries]}));
+		this.setState(prevState => ({ comicsAndSeries: [...prevState.comicsAndSeries, ...listComicsAndSeries]}));
+	}
+
+	changeFavorite = () => {
+		const { character } = this.props;
+
+		const characterUpdated = character;
+		characterUpdated.isFavorite = !this.state.isFavorite;
+		if (!this.state.isFavorite) {
+			// React-Redux v1 : this.props.addFavCharacter(character.id);
+			this.props.addFavoriteCharacter(characterUpdated);
+		} else {
+			// React-Redux v1 :this.props.removeFavCharacter(character.id);
+			this.props.deleteFavoriteCharacter(characterUpdated);
+		}
+
+		// Update the father - we have made a change
+		this.props.onClickFavoriteStar(this.props.character.id, !this.state.isFavorite);
+		this.setState({ isFavorite : !this.state.isFavorite});
 	}
 
 	render(){
 		const { character } = this.props;
-		const { comicsAndSeries } = this.state;
+		const { comicsAndSeries, isFavorite } = this.state;
 
 		return (
 			<div id='mainCharacter'>
@@ -122,7 +162,10 @@ class DetailCharacter extends Component {
 					</div>
 					<div id='mainIdentity'>
 						<div id='mainCharacterName'>
-							<span>{character.name}</span>
+							<span>
+								<span>{character.name}</span>
+								<span className={isFavorite ? 'isFavorite' : 'notFavorite'} onClick={this.changeFavorite}>★</span>
+							</span>
 						</div>
 						<div id='mainCharacterDescription'>
 							{character.description}
@@ -133,7 +176,7 @@ class DetailCharacter extends Component {
 					<div id='mainDetailList'>
 						<ListAppearances
 							appearances={comicsAndSeries}
-							onClickAppearance={this.props.displayInfoAppearance}
+							onClickAppearance={this.props.onClickAppearance}
 						/>
 					</div>
 				</div>
@@ -141,5 +184,22 @@ class DetailCharacter extends Component {
 		);
 	}
 }
+export default enhance(DetailCharacter)
 
-export default DetailCharacter;
+/* React-Redux v1
+import { connect } from 'react-redux';
+import { addFavCharacter_action } from './actions/addFavoriteCharacter';
+import { removeFavCharacter_action } from './actions/removeFavoriteCharacter';
+
+const mapStateToProps = state => {
+	return { listFavCharactersID: state.listFavCharactersID };
+};
+
+const mapDispatchToProps = dispatch => {
+	return {
+		addFavCharacter: id => dispatch(addFavCharacter_action(id)),
+		removeFavCharacter: id => dispatch(removeFavCharacter_action(id))
+	};
+};
+const DetailCharacter_wrapped = connect(mapStateToProps,mapDispatchToProps)(DetailCharacter);
+export default DetailCharacter_wrapped ;*/
