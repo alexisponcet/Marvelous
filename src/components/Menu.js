@@ -1,6 +1,8 @@
 import React from 'react';
-import MarvelImage from './images/menu1.jpg';
+
 import './Menu.css';
+import MarvelImage from './../images/menu1.jpg';
+
 
 const Menu = () => (
 	<div id='menu'>

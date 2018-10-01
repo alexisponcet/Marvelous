@@ -1,29 +1,31 @@
-import { createStore, compose } from 'redux';
-import fireReducer from './../reducers/favoriteCharacters';
-import { firebaseConfig } from './../config';
-import firebase from 'firebase/app';
+import { createStore, compose, applyMiddleware } from 'redux';
+import { firebaseConfig } from './firebase';
+import * as firebase from 'firebase';
 import 'firebase/firestore'; // important for firestore
 import { reactReduxFirebase } from 'react-redux-firebase';
 import { reduxFirestore } from 'redux-firestore';
+import reduxThunk from 'redux-thunk';
 
-export default function configureStore () {
-	// Initialize Firebase instance
-	firebase.initializeApp(firebaseConfig);
-
-	// Initialize Firestore with timeshot settings
-	firebase.firestore().settings({ timestampsInSnapshots: true });
-
-	const createStoreWithMiddleware = compose(
-		reactReduxFirebase(firebase),
-		reduxFirestore(firebase),
-	)(createStore)
-
-	const store = createStoreWithMiddleware(fireReducer);
-	return store;
-}
+import mainReducer from '../reducers/mainReducer';
 
 
-// export const store = createStore(favCharactersFirebaseReducer);
+// Initialize Firebase instance
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firestore with timeshot settings
+firebase.firestore().settings({ timestampsInSnapshots: true });
+
+const createStoreWithMiddleware = compose(
+	reactReduxFirebase(firebase),
+	reduxFirestore(firebase),
+)(createStore)
+
+export const store = createStoreWithMiddleware(mainReducer, {}, applyMiddleware
+(reduxThunk));
+export const authenticationRef = firebase.auth();
+export const provider = new firebase.auth.GoogleAuthProvider();
+
+
 
 /* Local Persistence : redux-persist
 import { persistStore, persistReducer } from 'redux-persist';

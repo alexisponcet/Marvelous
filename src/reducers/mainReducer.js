@@ -2,12 +2,16 @@ import { combineReducers } from 'redux';
 import { firebaseReducer } from 'react-redux-firebase';
 import { firestoreReducer } from 'redux-firestore';
 
-const fireReducer = combineReducers({
+import authentication from './authenticationReducer';
+
+
+const mainReducer = combineReducers({
 	firebase: firebaseReducer,
 	firestore: firestoreReducer,
+	authentication,
 })
 
-export default fireReducer;
+export default mainReducer;
 
 
 /* React-Redux v1
@@ -38,4 +42,4 @@ const favCharactersReducer = (state = initialState, action) => {
 			return state;
 	}
 };
-export default favCharactersReducer ;*/
+/*export default favCharactersReducer ;*/

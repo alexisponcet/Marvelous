@@ -7,4 +7,4 @@ export const firebaseConfig = {
 	messagingSenderId: "1058217705013"
 };
 
-export default { firebaseConfig };
+export default firebaseConfig;

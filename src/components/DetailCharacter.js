@@ -35,7 +35,6 @@ class DetailCharacter extends Component {
 				isFavorite: PropTypes.bool,
 			}),
 		onClickAppearance: PropTypes.func.isRequired,
-		onClickFavoriteStar: PropTypes.func.isRequired,
 		firestore: PropTypes.shape({ // from enhance (withFirestore)
 			set: PropTypes.func.isRequired,
 			delete: PropTypes.func.isRequired
@@ -67,7 +66,7 @@ class DetailCharacter extends Component {
 				isFavorite: nextProps.character.isFavorite,
 				comicsAndSeries: [],
 			});
-			this.didComics = false;
+			this.didSeries = false;
 			this.didComics = false;
 		}
 		this.updateComicsAndSeries(nextProps);
@@ -75,6 +74,7 @@ class DetailCharacter extends Component {
 
 	updateComicsAndSeries = (nextProps) => {
 		const { linkComics, linkSeries} = nextProps.character;
+
 
 		if (this.didComics && this.didSeries)
 			return;
@@ -134,15 +134,15 @@ class DetailCharacter extends Component {
 		const characterUpdated = character;
 		characterUpdated.isFavorite = !this.state.isFavorite;
 		if (!this.state.isFavorite) {
-			// React-Redux v1 : this.props.addFavCharacter(character.id);
+			/* React-Redux v1 :
+			this.props.favaddFavCharacter(character.id); */
 			this.props.addFavoriteCharacter(characterUpdated);
 		} else {
-			// React-Redux v1 :this.props.removeFavCharacter(character.id);
+			/* React-Redux v1 :
+			this.props.removeFavCharacter(character.id);*/
 			this.props.deleteFavoriteCharacter(characterUpdated);
 		}
 
-		// Update the father - we have made a change
-		this.props.onClickFavoriteStar(this.props.character.id, !this.state.isFavorite);
 		this.setState({ isFavorite : !this.state.isFavorite});
 	}
 
@@ -151,29 +151,29 @@ class DetailCharacter extends Component {
 		const { comicsAndSeries, isFavorite } = this.state;
 
 		return (
-			<div id='mainCharacter'>
-				<div id='mainInformation'>
-					<div id='mainPicture'>
+			<div id='detailCharacter'>
+				<div id='information'>
+					<div id='picture'>
 						<picture>
 							{/**<source media='(max-width: 100px)'
 							 srcSet={character.picture}/>**/}
 							<img src={character.picture} alt={character.name}/>
 						</picture>
 					</div>
-					<div id='mainIdentity'>
-						<div id='mainCharacterName'>
-							<span>
+					<div id='identity'>
+						<div id='wrapperName'>
+							<div id='name'>
 								<span>{character.name}</span>
 								<span className={isFavorite ? 'isFavorite' : 'notFavorite'} onClick={this.changeFavorite}>★</span>
-							</span>
+							</div>
 						</div>
-						<div id='mainCharacterDescription'>
+						<div id='description'>
 							{character.description}
 						</div>
 					</div>
 				</div>
-				<div id='mainDetail'>
-					<div id='mainDetailList'>
+				<div id='appearances'>
+					<div id='appearancesContainer'>
 						<ListAppearances
 							appearances={comicsAndSeries}
 							onClickAppearance={this.props.onClickAppearance}
@@ -192,7 +192,7 @@ import { addFavCharacter_action } from './actions/addFavoriteCharacter';
 import { removeFavCharacter_action } from './actions/removeFavoriteCharacter';
 
 const mapStateToProps = state => {
-	return { listFavCharactersID: state.listFavCharactersID };
+	return { listFavCharacters: state.listFavCharacters };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -201,5 +201,6 @@ const mapDispatchToProps = dispatch => {
 		removeFavCharacter: id => dispatch(removeFavCharacter_action(id))
 	};
 };
-const DetailCharacter_wrapped = connect(mapStateToProps,mapDispatchToProps)(DetailCharacter);
-export default DetailCharacter_wrapped ;*/
+const DetailCharacter_wrapper =
+ connect(mapStateToProps,mapDispatchToProps)(DetailCharacter);
+export default DetailCharacter_wrapper ;*/

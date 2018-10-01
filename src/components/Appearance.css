@@ -9,7 +9,7 @@
     display: inline-block;
 }
 
-.appearance > .pictureAppearance {
+.appearance > .appearancePicture {
     padding: 0.2em;
     border: 0.5em solid black;
 
@@ -25,8 +25,8 @@
     background-color: coral;
 }
 
-.appearance > .pictureAppearance > picture > source,
-.appearance > .pictureAppearance > picture > img {
+.appearance > .appearancePicture > picture > source,
+.appearance > .appearancePicture > picture > img {
     width: 100%;
     height: 100%;
     margin-left: auto;
