@@ -20,7 +20,7 @@ class SignIn extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.authentication) {
-      this.context.router.history.push("/marvel");
+      this.context.router.history.push("/home");
     }
   }
 

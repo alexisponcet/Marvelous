@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 
 
 const SmallCharacter = ({ character, onClick }) => (
-	<div className='character'>
+	<div className='character' onClick={() => onClick(character)} >
 		<picture>
 			{/**<source media='(max-width: 100px)' srcSet={picture}/>**/}
 			<img src={character.picture} alt={character.name} />
-			<div className='characterName' onClick={() => onClick(character)}>
+			<div className='characterName'>
 				<span>{character.name}</span>
 			</div>
 		</picture>

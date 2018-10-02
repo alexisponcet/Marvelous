@@ -6,25 +6,12 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 
 import './Home.css';
 import Menu from './Menu';
-import DetailCharacter from './DetailCharacter';
+import { DetailCharacter_HOC } from './DetailCharacter';
 import ListCharacters from './ListCharacters';
 import PropTypes from 'prop-types';
 
 
-const enhance = compose(
-	firestoreConnect([
-		// Load favorite characters from firestore
-		{ collection: 'favoriteCharacters'}
-	]),
-	connect(
-		({ firestore }) => ({
-			listFavCharacters: firestore.ordered.favoriteCharacters,
-		})
-	)
-)
-
-
-class Home extends Component {
+export class Home extends Component {
 
 	static propTypes = {
 		listFavCharacters: PropTypes.array,
@@ -59,7 +46,7 @@ class Home extends Component {
 			<div id='home'>
 				{ notSelected
 					? <Menu/>
-					: <DetailCharacter
+					: <DetailCharacter_HOC
 						character={currentCharacter}
 						onClickAppearance={this.displayInfoAppearance}
 					/>
@@ -76,7 +63,17 @@ class Home extends Component {
 		);
 	}
 }
-export default enhance(Home);
+
+export const Home_HOC = compose(
+	firestoreConnect([
+		// Load favorite characters from firestore
+		{ collection: 'favoriteCharacters'}
+	]),
+	connect((state) => ({
+			listFavCharacters: state.firestore.ordered.favoriteCharacters,
+	}))
+)(Home);
+
 
 /* React-Redux v1
 const mapStateToProps = state => {

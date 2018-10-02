@@ -5,13 +5,13 @@ import { firestoreReducer } from 'redux-firestore';
 import authentication from './authenticationReducer';
 
 
-const mainReducer = combineReducers({
+const rootReducer = combineReducers({
 	firebase: firebaseReducer,
 	firestore: firestoreReducer,
 	authentication,
 })
 
-export default mainReducer;
+export default rootReducer;
 
 
 /* React-Redux v1

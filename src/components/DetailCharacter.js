@@ -8,18 +8,7 @@ import ListAppearances from './ListAppearances';
 import PropTypes from 'prop-types';
 
 
-const enhance = compose(
-	withFirestore, // Add props.firestore
-	withHandlers({
-		addFavoriteCharacter: ({ firestore, character }) => () =>
-			firestore.set({ collection: 'favoriteCharacters', doc: character.id.toString()}, { character }),
-		deleteFavoriteCharacter: ({ firestore, character }) => () =>
-			firestore.delete({ collection: 'favoriteCharacters', doc: character.id.toString() })
-	})
-)
-
-
-class DetailCharacter extends Component {
+export class DetailCharacter extends Component {
 
 	didSeries;
 	didComics;
@@ -51,8 +40,8 @@ class DetailCharacter extends Component {
 			isFavorite: this.props.character.isFavorite,
 			comicsAndSeries: [],
 		}
-		this.didSeries = false;
 		this.didComics = false;
+		this.didSeries = false;
 	}
 
 	componentDidMount() {
@@ -66,8 +55,8 @@ class DetailCharacter extends Component {
 				isFavorite: nextProps.character.isFavorite,
 				comicsAndSeries: [],
 			});
-			this.didSeries = false;
 			this.didComics = false;
+			this.didSeries = false;
 		}
 		this.updateComicsAndSeries(nextProps);
 	}
@@ -184,7 +173,15 @@ class DetailCharacter extends Component {
 		);
 	}
 }
-export default enhance(DetailCharacter)
+export const DetailCharacter_HOC = compose(
+	withFirestore, // Add props.firestore
+	withHandlers({
+		addFavoriteCharacter: ({ firestore, character }) => () =>
+			firestore.set({ collection: 'favoriteCharacters', doc: character.id.toString()}, { character }),
+		deleteFavoriteCharacter: ({ firestore, character }) => () =>
+			firestore.delete({ collection: 'favoriteCharacters', doc: character.id.toString() })
+	})
+)(DetailCharacter);
 
 /* React-Redux v1
 import { connect } from 'react-redux';

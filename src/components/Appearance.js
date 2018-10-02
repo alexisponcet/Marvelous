@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 
 
 const Appearance = ({ id, title, picture, urlCharacters, isComics, onClick }) => (
-	<div className='appearance'>
+	<div className='appearance' onClick={() => onClick(urlCharacters)}>
 		<div className={isComics ? 'isComics appearancePicture' : 'isSeries appearancePicture'}>
 			<picture>
 				{/**<source media='(max-width: 100px)' srcSet={picture}/>**/}
-				<img src={picture} alt={title} onClick={() => onClick(urlCharacters)}/>
+				<img src={picture} alt={title} />
 			</picture>
 		</div>
 		<div className='nameAppearance'>
