@@ -100,20 +100,16 @@ export class DetailCharacter extends Component {
 	}
 
 	getComicsOrSeries = (data, isComics) => {
-		let listComicsAndSeries = [];
-		let newComicsAndSeries = {};
-
-		data.map(d => {
-			newComicsAndSeries = {
-				id : d.id,
-				title : d.title,
-				picture : d.thumbnail.path + "." +
-					d.thumbnail.extension,
-				urlCharacters: d.characters.collectionURI,
+		let listComicsAndSeries = data.map(comicsOrSerie => {
+			return {
+				id : comicsOrSerie.id,
+				title : comicsOrSerie.title,
+				picture : comicsOrSerie.thumbnail.path + "." +
+					comicsOrSerie.thumbnail.extension,
+				urlCharacters: comicsOrSerie.characters.collectionURI,
+				isComics: isComics,
 			}
-			newComicsAndSeries.isComics = isComics;
-			listComicsAndSeries.push(newComicsAndSeries);
-		})
+		});
 		this.setState(prevState => ({ comicsAndSeries: [...prevState.comicsAndSeries, ...listComicsAndSeries]}));
 	}
 
@@ -173,7 +169,7 @@ export class DetailCharacter extends Component {
 		);
 	}
 }
-export const DetailCharacter_HOC = compose(
+export const DetailCharacterHOC = compose(
 	withFirestore, // Add props.firestore
 	withHandlers({
 		addFavoriteCharacter: ({ firestore, character }) => () =>

@@ -21,8 +21,8 @@ const createStoreWithFirebase = compose(
 	reduxFirestore(firebase),
 )(createStore)
 
-export const store = createStoreWithFirebase(rootReducer, initialState, applyMiddleware
-(reduxThunk));
+export const store = createStoreWithFirebase(rootReducer, initialState,
+	applyMiddleware(reduxThunk));
 export const authenticationRef = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 

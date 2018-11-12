@@ -53,7 +53,7 @@ class ListCharacters extends Component {
 		let isFavorite;
 		let index, firstIndexNotFavorite = 0;
 
-		data.map(character => {
+		data.forEach(character => {
 			newCharacter = {
 				id: character.id,
 				name: character.name,
@@ -63,7 +63,7 @@ class ListCharacters extends Component {
 				linkComics: character.comics.collectionURI,
 				linkSeries: character.series.collectionURI,
 			}
-			isFavorite = (listFavCharacters.find(c => c.id.toString() === newCharacter.id.toString()) !== undefined)
+			isFavorite = (listFavCharacters.find(c => c.id.toString() === newCharacter.id.toString()) !== undefined);
 			if (isFavorite) {
 				index = firstIndexNotFavorite;
 				firstIndexNotFavorite = firstIndexNotFavorite + 1;

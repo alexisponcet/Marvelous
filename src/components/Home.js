@@ -6,7 +6,7 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 
 import './Home.css';
 import Menu from './Menu';
-import { DetailCharacter_HOC } from './DetailCharacter';
+import { DetailCharacterHOC } from './DetailCharacter';
 import ListCharacters from './ListCharacters';
 import PropTypes from 'prop-types';
 
@@ -46,7 +46,7 @@ export class Home extends Component {
 			<div id='home'>
 				{ notSelected
 					? <Menu/>
-					: <DetailCharacter_HOC
+					: <DetailCharacterHOC
 						character={currentCharacter}
 						onClickAppearance={this.displayInfoAppearance}
 					/>
@@ -64,7 +64,7 @@ export class Home extends Component {
 	}
 }
 
-export const Home_HOC = compose(
+export const HomeHOC = compose(
 	firestoreConnect([
 		// Load favorite characters from firestore
 		{ collection: 'favoriteCharacters'}

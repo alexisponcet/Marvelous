@@ -27,9 +27,9 @@ class SignIn extends Component {
   render() {
     return (
       <div id='signIn'>
-          <a href="#" className="btn btn-block btn-social btn-google" onClick={this.props.signIn}>
-	          <span className="fab fa-google"></span> Sign in with Google
-          </a>
+	      <button className="btn btn-block btn-social btn-google" onClick={this.props.signIn}>
+		      <i className="fab fa-google"></i>  Sign in with Google
+	      </button>
       </div>
     );
   }

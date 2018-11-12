@@ -6,7 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 import SignIn from './components/SignIn';
 import requireAuthentication from './authentication/requireAuthentication';
-import { Home_HOC } from './components/Home';
+import { HomeHOC } from './components/Home';
 import { fetchUser } from './actions/authentication';
 
 
@@ -21,7 +21,7 @@ class App extends Component {
 			<BrowserRouter>
 				<div id='marvel'>
 					<Route exact path="/" component={SignIn}/>
-					<Route path="/home" component={requireAuthentication(Home_HOC)}/>
+					<Route path="/home" component={requireAuthentication(HomeHOC)}/>
 				</div>
 			</BrowserRouter>
 		)
