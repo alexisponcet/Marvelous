@@ -19,7 +19,7 @@ const initialState = {}
 const createStoreWithFirebase = compose(
 	reactReduxFirebase(firebase),
 	reduxFirestore(firebase),
-)(createStore)
+)(createStore);
 
 export const store = createStoreWithFirebase(rootReducer, initialState,
 	applyMiddleware(reduxThunk));
