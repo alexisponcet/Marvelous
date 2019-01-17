@@ -1,14 +1,56 @@
 import React, { Component } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
+import styled from 'styled-components';
 
-import './ListCharacters.css';
 import SmallCharacter from './SmallCharacter';
+import SearchCharacter from './SearchCharacter';
 import PropTypes from 'prop-types';
 
 
-class ListCharacters extends Component {
+const DisplayCharacters = styled.div`
+	/* Positioning */
+    position: relative;
+    top: 0;
+    left: 0;
+  
+    /* Display & Box Model */
+    display: inline-block;
+    @media only screen and (max-width: 520px) {
+        display: flex;
+    }
+    overflow-y: auto;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 33vh;
+    min-height: 104px;
+    max-height: 208px;
+    padding: 0;
+    border: solid black 4px;
+    margin: 0;
+    user-select: none;
+}
+`;
 
+const WrapperCharacters = styled.section`
+`;
+
+
+export default class ListCharacters extends Component {
+
+	static propTypes = {
+		listFavCharacters: PropTypes.array,
+		currentCharacter: PropTypes.shape({
+			id: PropTypes.number,
+			name: PropTypes.string,
+			description: PropTypes.string,
+			picture: PropTypes.string,
+			linkComics: PropTypes.string,
+			linkSeries: PropTypes.string,
+			isFavorite: PropTypes.bool,
+		}),
+		currentAppearanceLink: PropTypes.string,
+		onClickCharacter: PropTypes.func.isRequired,
+	}
+	
 	constructor(props) {
 		super(props);
 
@@ -40,9 +82,9 @@ class ListCharacters extends Component {
 				},
 				(error) => {
 					window.document.body.style.cursor = 'default';
-					alert("Error while getting marvel character data : " + error);
+					alert('Error while getting marvel character data : ' + error);
 				}
-			)
+			);
 	}
 
 	getCharacters = (data) => {
@@ -58,11 +100,11 @@ class ListCharacters extends Component {
 				id: character.id,
 				name: character.name,
 				description: character.description,
-				picture: character.thumbnail.path + "." +
+				picture: character.thumbnail.path + '.' +
 					character.thumbnail.extension,
 				linkComics: character.comics.collectionURI,
 				linkSeries: character.series.collectionURI,
-			}
+			};
 			isFavorite = (listFavCharacters.find(c => c.id.toString() === newCharacter.id.toString()) !== undefined);
 			if (isFavorite) {
 				index = firstIndexNotFavorite;
@@ -71,7 +113,7 @@ class ListCharacters extends Component {
 				index = listCharacters.length;
 			newCharacter.isFavorite = isFavorite;
 			listCharacters.splice(index, 0, newCharacter);
-		})
+		});
 		this.setState({
 			listCharacters: listCharacters,
 			listCharacters_filter: listCharacters, // reinitialize the filter
@@ -86,8 +128,8 @@ class ListCharacters extends Component {
 			return true;
 		return false;
 	}
-
-	componentWillReceiveProps(nextProps) {
+	
+	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.listFavCharacters.length !== this.props.listFavCharacters.length)
 			this.updateFavCharactersFirst(nextProps);
 
@@ -140,8 +182,8 @@ class ListCharacters extends Component {
 		const { listCharacters, listCharacters_filter } = this.state;
 
 		return (
-			<div>
-				<div id='charactersListing'>
+			<WrapperCharacters>
+				<DisplayCharacters>
 					{
 						listCharacters_filter.map(character =>
 							<SmallCharacter
@@ -151,33 +193,13 @@ class ListCharacters extends Component {
 							/>
 						)
 					}
-				</div>
-
-				<Typeahead
-					multiple
+				</DisplayCharacters>
+				
+				<SearchCharacter
+					listCharacters = {listCharacters}
 					onChange={this.filterTheCharacters}
-					options={listCharacters}
-					labelKey={option => `${option.name}`}
 				/>
-			</div>
-		)
+			</WrapperCharacters>
+		);
 	}
 }
-
-
-ListCharacters.propTypes = {
-	listFavCharacters: PropTypes.array,
-	currentCharacter: PropTypes.shape({
-		id: PropTypes.number,
-		name: PropTypes.string,
-		description: PropTypes.string,
-		picture: PropTypes.string,
-		linkComics: PropTypes.string,
-		linkSeries: PropTypes.string,
-		isFavorite: PropTypes.bool,
-	}),
-	currentAppearanceLink: PropTypes.string,
-	onClickCharacter: PropTypes.func.isRequired,
-}
-
-export default ListCharacters;

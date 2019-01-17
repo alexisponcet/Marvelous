@@ -1,30 +1,77 @@
 import React, { Component } from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-
-import './App.css';
 import SignIn from './components/SignIn';
 import requireAuthentication from './authentication/requireAuthentication';
 import { HomeHOC } from './components/Home';
-import { fetchUser } from './actions/authentication';
+import { fetchUser } from './store/actions/authentication';
+import PropTypes from 'prop-types';
+
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    /* Positioning */
+    position: relative;
+    top: 0;
+    left: 0;
+  
+    /* Display & Box Model */
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    
+    /* Color */
+    background-color: white;
+    color: black;
+    
+    /* Text */
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+`;
+
+const Marvel = styled.main`
+	/* Positioning */
+	position: relative;
+    top: 0;
+    left: 0;
+
+	/* Display & Box Model */
+	width: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+    margin: 0;
+
+	/* Color */
+    background-color: black;
+`;
 
 
 class App extends Component {
-
-	componentWillMount() {
+	
+	static propTypes = {
+		fetchUser: PropTypes.func.isRequired
+	};
+	
+	UNSAFE_componentWillMount() {
 		this.props.fetchUser();
 	}
 
 	render() {
 		return (
 			<BrowserRouter>
-				<div id='marvel'>
-					<Route exact path="/" component={SignIn}/>
-					<Route path="/home" component={requireAuthentication(HomeHOC)}/>
-				</div>
+				<Marvel>
+					<GlobalStyle />
+					<Route exact path='/' component={SignIn}/>
+					<Route path='/home' component={requireAuthentication(HomeHOC)}/>
+				</Marvel>
 			</BrowserRouter>
-		)
+		);
 	}
 }
 export default connect(null, { fetchUser })(App);

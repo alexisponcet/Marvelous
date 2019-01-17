@@ -1,21 +1,21 @@
 import { createStore, compose, applyMiddleware } from 'redux';
-import { firebaseConfig } from './firebase';
-import * as firebase from 'firebase';
-import 'firebase/firestore'; // important for firestore
+import reduxThunk from 'redux-thunk';
 import { reactReduxFirebase } from 'react-redux-firebase';
 import { reduxFirestore } from 'redux-firestore';
-import reduxThunk from 'redux-thunk';
 
-import rootReducer from '../reducers/rootReducer';
+import settings from './../firebase/Settings';
+import * as firebase from 'firebase';
+import 'firebase/firestore'; // important for firestore
+import rootReducer from './reducers/rootReducer';
 
 
 // Initialize Firebase instance
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(settings);
 
-// Initialize Firestore with timeshot settings
+// Initialize Firestore with timeshot firebase
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
-const initialState = {}
+const initialState = {};
 const createStoreWithFirebase = compose(
 	reactReduxFirebase(firebase),
 	reduxFirestore(firebase),

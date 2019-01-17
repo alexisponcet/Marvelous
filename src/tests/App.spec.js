@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
 import { Provider } from 'react-redux';
-import { store } from '../settings/storeWithFirebase';
-import App from '../App';
+import { store } from './../store/storeWithFirebase';
+import App from './../App';
 
 
 describe('<App />', () => {
@@ -22,4 +22,4 @@ describe('<App />', () => {
 	it('should render app without crashing', () => {
 		expect(wrapper).to.have.descendants(App);
 	});
-})
+});

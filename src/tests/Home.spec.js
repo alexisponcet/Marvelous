@@ -1,14 +1,13 @@
 import React, { Children, Component } from 'react';
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
-import { spy } from 'sinon';
+import { shallow } from 'enzyme';
 import 'jsdom-global/register';
 import ReactTestUtils from 'react-dom/test-utils';
 import PropTypes from 'prop-types';
 
-import { store } from '../settings/storeWithFirebase';
+import { store } from './../store/storeWithFirebase';
 import { Home_HOC } from './../components/Home';
-import { Home } from '../components/Home';
+import { Home } from './../components/Home';
 import Menu from './../components/Menu';
 import { DetailCharacter_HOC}  from './../components/DetailCharacter';
 import ListCharacters from './../components/ListCharacters';
@@ -33,17 +32,22 @@ describe('<Home />', () => {
 
 	class MockProvider extends Component {
 		getChildContext () {
-			return { store: this.props.store }
+			return { store: this.props.store };
 		}
 
 		render () {
-			return Children.only(this.props.children)
+			return Children.only(this.props.children);
+		}
+		
+		static propTypes = {
+			store: PropTypes.object.isRequired,
+			children: PropTypes.any
 		}
 	}
 
 	MockProvider.childContextTypes = {
 		store: PropTypes.object.isRequired
-	}
+	};
 
 	it('should receive the store in the context', () => {
 		const wrapper = ReactTestUtils.renderIntoDocument(
@@ -53,7 +57,7 @@ describe('<Home />', () => {
 		);
 		const home = ReactTestUtils.findRenderedComponentWithType(wrapper, Home_HOC);
 		expect(home.context.store).to.equal(store);
-	})
+	});
 
 	describe('Structure home', () => {
 		describe('when opening home page', () => {
@@ -61,8 +65,8 @@ describe('<Home />', () => {
 				expect(wrapper).to.have.descendants(Menu);
 				expect(wrapper).not.to.have.descendants(DetailCharacter_HOC);
 				expect(wrapper).to.have.descendants(ListCharacters);
-			})
-		})
+			});
+		});
 
 		describe('when a character is clicked', () => {
 			it('should have the detail of the current character and a list of' +
@@ -72,9 +76,9 @@ describe('<Home />', () => {
 				//expect(wrapper).not.to.have.descendants(Menu);
 				//expect(wrapper).to.have.descendants(DetailCharacter_HOC);
 				//expect(wrapper).to.have.descendants(ListCharacters);
-			})
-		})
-	})
+			});
+		});
+	});
 
 	describe('when a character is clicked', () => {
 		it('should update the current character', () => {
@@ -91,8 +95,8 @@ describe('<Home />', () => {
 			wrapper.instance().displayInfoCharacter(newCharacter);
 
 			expect(wrapper.state().currentCharacter).to.equal(newCharacter);
-		})
-	})
+		});
+	});
 
 	describe('when an appearance is clicked', () => {
 		it('should update the current appearance link', () => {
@@ -101,6 +105,6 @@ describe('<Home />', () => {
 			wrapper.instance().displayInfoAppearance(newUrl);
 
 			expect(wrapper.state().currentAppearanceLink).to.equal(newUrl);
-		})
-	})
-})
+		});
+	});
+});

@@ -3,21 +3,19 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import registerServiceWorker from './registerServiceWorker';
 
-import './index.css';
 import App from './App';
-import { store } from './settings/storeWithFirebase';
+import { store } from './store/storeWithFirebase';
 
 
 ReactDOM.render(
 	<Provider store={store}>
 		<App />
 	</Provider>,
-document.getElementById('root'));
+	document.getElementById('root'));
 registerServiceWorker();
-
 
 /* Local Persistence : redux-persist
 import { PersistGate } from 'redux-persist/integration/react';
-import { persistor } from './settings/configureStore';
+import { persistor } from './firebase/configureStore';
 
 <PersistGate loading={null} persistor={persistor}></PersistGate> */

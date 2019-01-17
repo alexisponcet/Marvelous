@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import { spy } from 'sinon';
 import 'jsdom-global/register';
 
-import Appearance from '../components/Appearance';
+import Appearance from './../components/Appearance';
 
 
 describe('<Appearance />', () => {
@@ -19,12 +19,12 @@ describe('<Appearance />', () => {
 			picture = 'pictureComics1.jpg'
 			urlCharacters = 'http://myUrlComics1'
 			isComics = {true}
-			onClick = {onClick} />)
+			onClick = {onClick} />);
 	});
 
 	it('should trigger its `onClick` prop when clicked', () => {
 		wrapper.simulate('click');
 
 		expect(onClick).to.have.been.calledOnce();
-	})
-})
+	});
+});

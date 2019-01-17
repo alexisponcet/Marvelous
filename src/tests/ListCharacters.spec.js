@@ -4,8 +4,7 @@ import { shallow } from 'enzyme';
 import sinon from 'sinon';
 import 'jsdom-global/register';
 
-import { store } from '../settings/storeWithFirebase';
-import ListCharacters from '../components/ListCharacters';
+import ListCharacters from './../components/ListCharacters';
 
 
 describe('<ListCharacter />', () => {
@@ -41,7 +40,7 @@ describe('<ListCharacter />', () => {
 			currentCharacter={currentCharacter}
 			onClickCharacter={onClick} />);
 		instance = wrapper.instance();
-	})
+	});
 
 	afterEach(() => {
 		wrapper.unmount();
@@ -85,7 +84,7 @@ describe('<ListCharacter />', () => {
 						series: {
 							collectionURI: 'http://myUrlSeries ' + i,
 						},
-					}
+					};
 					listCharactersBeforeUpdate.push(character);
 
 					let characterAfter = JSON.parse(JSON.stringify((character)));
@@ -105,7 +104,7 @@ describe('<ListCharacter />', () => {
 				expect(wrapper.state().listCharacters_filter).to.deep.equal(listCharactersAfterUpdate);
 				expect(wrapper.state().firstIndexNotFavorite).to.equal(0);
 			});
-		})
+		});
 
 		describe ('with few favorite characters', ()=> {
 			it('should match new data and favorite characters list', () => {
@@ -127,7 +126,7 @@ describe('<ListCharacter />', () => {
 						series: {
 							collectionURI: 'http://myUrlSeries ' + i,
 						},
-					}
+					};
 					if (i % 2 === 0)
 						initialFavoriteCharacter.push(character);
 					listCharactersBeforeUpdate.push(character);
@@ -146,13 +145,13 @@ describe('<ListCharacter />', () => {
 					listFavCharacters={initialFavoriteCharacter}
 					currentAppearanceLink={currentAppearanceLink}
 					currentCharacter={currentCharacter}
-					onClickCharacter={onClick}/>)
+					onClickCharacter={onClick}/>);
 				instance = wrapper.instance();
 
 				instance.getCharacters(listCharactersBeforeUpdate);
 
 				const listCharactersAfterUpdate_Fav =
-				 listCharactersAfterUpdate.filter(character => character.isFavorite);
+					listCharactersAfterUpdate.filter(character => character.isFavorite);
 				const listCharactersAfterUpdate_notFav = listCharactersAfterUpdate.filter(character =>
 					!character.isFavorite);
 				listCharactersAfterUpdate = [...listCharactersAfterUpdate_Fav, ...listCharactersAfterUpdate_notFav];
@@ -160,9 +159,9 @@ describe('<ListCharacter />', () => {
 				expect(wrapper.state().listCharacters).to.deep.equal(listCharactersAfterUpdate);
 				expect(wrapper.state().listCharacters_filter).to.deep.equal(listCharactersAfterUpdate);
 				expect(wrapper.state().firstIndexNotFavorite).to.equal(10);
-			})
-		})
-	})
+			});
+		});
+	});
 
 	describe('when a favorite character is updated', () => {
 		describe('when the current character is upgraded', () => {
@@ -171,7 +170,7 @@ describe('<ListCharacter />', () => {
 					listCharacters: [currentCharacter, anotherCharacter],
 					listCharacters_filter: [currentCharacter, anotherCharacter],
 					firstIndexNotFavorite: 0,
-				})
+				});
 				currentCharacter.isFavorite = true;
 				const newFavoriteCharacter = [...noFavoriteCharacter, currentCharacter];
 				const nextProps = {
@@ -184,7 +183,7 @@ describe('<ListCharacter />', () => {
 				instance.componentWillReceiveProps(nextProps);
 
 				expect(wrapper.state().firstIndexNotFavorite).to.equal(1);
-			})
+			});
 		});
 
 		describe('when the current character is downgraded', () => {
@@ -194,13 +193,13 @@ describe('<ListCharacter />', () => {
 					listFavCharacters={initialFavoriteCharacter}
 					currentAppearanceLink={currentAppearanceLink}
 					currentCharacter={currentCharacter}
-					onClickCharacter={onClick} />)
+					onClickCharacter={onClick} />);
 				instance = wrapper.instance();
 				instance.setState({
 					listCharacters : [currentCharacter, anotherCharacter],
 					listCharacters_filter: [currentCharacter, anotherCharacter],
 					firstIndexNotFavorite: 1,
-				})
+				});
 				currentCharacter.isFavorite = false;
 				const newFavoriteCharacter = noFavoriteCharacter;
 				const nextProps = {
@@ -213,9 +212,9 @@ describe('<ListCharacter />', () => {
 				instance.componentWillReceiveProps(nextProps);
 
 				expect(wrapper.state().firstIndexNotFavorite).to.equal(0);
-			})
-		})
-	})
+			});
+		});
+	});
 
 	describe('when a character is selected from the autocomplete input', () => {
 		it('should reinitialize the filter', () =>{
@@ -224,7 +223,7 @@ describe('<ListCharacter />', () => {
 			instance.filterTheCharacters(newListCharacters_filter);
 
 			expect(wrapper.state().listCharacters_filter).to.deep.equal(wrapper.state().listCharacters);
-		})
+		});
 
 		it('should update the filter', () =>{
 			const newListCharacters_filter = [currentCharacter];
@@ -232,7 +231,7 @@ describe('<ListCharacter />', () => {
 			instance.filterTheCharacters(newListCharacters_filter);
 
 			expect(wrapper.state().listCharacters_filter).to.deep.equal(newListCharacters_filter);
-		})
-	})
+		});
+	});
 
-})
+});

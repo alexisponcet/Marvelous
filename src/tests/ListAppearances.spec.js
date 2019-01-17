@@ -4,9 +4,8 @@ import { shallow } from 'enzyme';
 import { spy } from 'sinon';
 import 'jsdom-global/register';
 
-import { store } from '../settings/storeWithFirebase';
-import ListAppearances from '../components/ListAppearances';
-import Appearance from '../components/Appearance';
+import ListAppearances from './../components/ListAppearances';
+import Appearance from './../components/Appearance';
 import {Scrollbars} from 'react-custom-scrollbars';
 
 
@@ -16,7 +15,7 @@ describe('<ListAppearances />', () => {
 	let wrapper;
 	let listComicsAndSeries;
 	beforeEach(() => {
-		 listComicsAndSeries = [{
+		listComicsAndSeries = [{
 			id : 1,
 			title : 'Comics 1',
 			picture : 'pictureComics1.jpg',
@@ -32,7 +31,7 @@ describe('<ListAppearances />', () => {
 		const onClick = spy();
 		wrapper = shallow(<ListAppearances
 			appearances={listComicsAndSeries}
-			onClickAppearance={onClick}/>)
+			onClickAppearance={onClick}/>);
 	});
 
 	describe('Structure listAppearance component', () => {
@@ -42,11 +41,11 @@ describe('<ListAppearances />', () => {
 			wrapper.find(Scrollbars).shallow().setProps({renderView: () => render});
 			expect(wrapper).to.have.descendants(Scrollbars);
 			expect(wrapper.find(Scrollbars)).to.have.lengthOf(1);
-		})
+		});
 
 		it('should have 2 comics and series', () => {
 			expect(wrapper).to.have.descendants(Appearance);
 			expect(wrapper.find(Appearance)).to.have.lengthOf(listComicsAndSeries.length);
-		})
-	})
-})
+		});
+	});
+});

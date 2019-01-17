@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
-
+import styled from 'styled-components';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 
-import './Home.css';
 import Menu from './Menu';
 import { DetailCharacterHOC } from './DetailCharacter';
 import ListCharacters from './ListCharacters';
 import PropTypes from 'prop-types';
 
+const FirstPage = styled.section`
+	/* Positioning */
+    position: relative;
+    top: 0;
+    left: 0;
+  
+    /* Display & Box Model */
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    margin: 0;
+`;
 
-export class Home extends Component {
+
+class Home extends Component {
 
 	static propTypes = {
 		listFavCharacters: PropTypes.array,
-	}
+	};
 
 	URL_CHARACTERS = 'http://gateway.marvel.com/v1/public/characters';
 
@@ -43,7 +56,7 @@ export class Home extends Component {
 		const notSelected = (Object.keys(currentCharacter).length === 0 && currentCharacter.constructor === Object);
 
 		return (
-			<div id='home'>
+			<FirstPage>
 				{ notSelected
 					? <Menu/>
 					: <DetailCharacterHOC
@@ -55,22 +68,21 @@ export class Home extends Component {
 				{ isLoaded(listFavCharacters)
 					&&
 					<ListCharacters listFavCharacters = {listFavCharacters}
-					                currentCharacter = {currentCharacter}
-					                currentAppearanceLink = {currentAppearanceLink}
-				                onClickCharacter={this.displayInfoCharacter}/>
+						currentCharacter = {currentCharacter}
+						currentAppearanceLink = {currentAppearanceLink}
+						onClickCharacter={this.displayInfoCharacter}/>
 				}
-			</div>
+			</FirstPage>
 		);
 	}
 }
-
 export const HomeHOC = compose(
 	firestoreConnect([
 		// Load favorite characters from firestore
 		{ collection: 'favoriteCharacters'}
 	]),
 	connect((state) => ({
-			listFavCharacters: state.firestore.ordered.favoriteCharacters,
+		listFavCharacters: state.firestore.ordered.favoriteCharacters,
 	}))
 )(Home);
 

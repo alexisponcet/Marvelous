@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import { spy } from 'sinon';
 import 'jsdom-global/register';
 
-import SmallCharacter from '../components/SmallCharacter';
+import SmallCharacter from './../components/SmallCharacter';
 
 
 describe('<SmallCharacter />', () => {
@@ -15,14 +15,15 @@ describe('<SmallCharacter />', () => {
 	beforeEach(() => {
 		wrapper = shallow(<SmallCharacter
 			character={
-				{id : 111111,
-				name : 'Avengers 1.0',
-				description : 'Description Avengers 1.0',
-				picture : 'pictureAvengers1.0.jpg',
-				linkComics : 'http://myUrlComics',
-				linkSeries : 'http://myUrlSeries',
-				isFavorite : false}}
-			onClick = {onClick} />)
+				{
+					id : 111111,
+					name : 'Avengers 1.0',
+					description : 'Description Avengers 1.0',
+					picture : 'pictureAvengers1.0.jpg',
+					linkComics : 'http://myUrlComics',
+					linkSeries : 'http://myUrlSeries',
+					isFavorite : false}}
+			onClick = {onClick} />);
 	});
 
 
@@ -30,5 +31,5 @@ describe('<SmallCharacter />', () => {
 		wrapper.simulate('click');
 
 		expect(onClick).to.have.been.calledOnce();
-	})
-})
+	});
+});

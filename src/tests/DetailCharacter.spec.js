@@ -4,7 +4,6 @@ import { shallow } from 'enzyme';
 import sinon from 'sinon';
 import 'jsdom-global/register';
 
-import { store } from '../settings/storeWithFirebase';
 import { DetailCharacter } from './../components/DetailCharacter';
 
 
@@ -41,7 +40,7 @@ describe('<DetailCharacter />', () => {
 			firestore={firestore}
 			addFavoriteCharacter={set}
 			deleteFavoriteCharacter={del} />);
-			instance = wrapper.instance();
+		instance = wrapper.instance();
 	});
 
 	afterEach(() => {
@@ -94,7 +93,7 @@ describe('<DetailCharacter />', () => {
 						collectionURI: 'http//myUrl ' + i,
 					},
 					isComics: true,
-				}
+				};
 				listComicsBeforeUpdate.push(comics);
 
 				let series = JSON.parse(JSON.stringify((comics)));
@@ -120,8 +119,8 @@ describe('<DetailCharacter />', () => {
 			instance.getComicsOrSeries(listSeriesBeforeUpdate, false);
 			listSeriesAfterUpdate = [...listComicsAfterUpdate, ...listSeriesAfterUpdate];
 			expect(wrapper.state().comicsAndSeries).to.deep.equal(listSeriesAfterUpdate);
-		})
-	})
+		});
+	});
 
 	describe('when changing the state of the character (favorite y/n)', () => {
 		it('should upgrade/downgrade the caracter', () => {
@@ -132,6 +131,6 @@ describe('<DetailCharacter />', () => {
 			instance.changeFavorite();
 
 			expect(wrapper.state().isFavorite).to.equal(false);
-		})
-	})
-})
+		});
+	});
+});
