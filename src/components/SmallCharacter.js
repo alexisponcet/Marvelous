@@ -58,8 +58,7 @@ const DisplayImage = styled.img`
     height: 100%;
     padding: 0;
     border: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 0 auto;
 `;
 
 const DisplayPicture = styled.picture`
@@ -93,7 +92,6 @@ const DisplayCharacter = styled.div`
     padding: 0;
     border: 0.1em solid black;
     margin: 0;
-	
     
     /* Color */
     background-color: black;

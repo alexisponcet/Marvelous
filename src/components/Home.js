@@ -16,8 +16,11 @@ const FirstPage = styled.section`
     left: 0;
   
     /* Display & Box Model */
-    width: 100%;
-    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, minmax(33.3vh, 1fr)) minmax(112px, 246px);
+
+    width: 100vw;
+    height: 100vh;
     padding: 0;
     border: 0;
     margin: 0;

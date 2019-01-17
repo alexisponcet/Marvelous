@@ -30,10 +30,11 @@ const DisplayAppearances = styled.div`
     left: 0;
 
 	/* Display & Box Model */
-	width: 100%;
-    height: 50%;
+	grid-row: 2;
+	width: auto;
+    height: auto;
     @media only screen and (max-height: 400px) {
-        height: 0%;
+        display: none;
 	}
     padding: 0;
     border: 0.2em solid black;
@@ -47,9 +48,10 @@ const DisplayDescription = styled.div`
     left: 0;
 
 	/* Display & Box Model */
+	grid-row: 2 / 6;
 	overflow: auto;
-	width: 100%;
-    height: 80%;
+	width: auto;
+    height: auto;
     padding: 0;
     border: 0;
     margin: 0;
@@ -59,10 +61,10 @@ const DisplayDescription = styled.div`
     
 	/* Text */
     font-size: calc(4vw);
-    text-align: justify;
     @media only screen and (min-width: 400px) {
         font-size: 1.15em;
     }
+    text-align: justify;
 `;
 
 const DisplayName = styled.div`
@@ -113,10 +115,12 @@ const WrapperName = styled.div`
     left: 0;
 
 	/* Display & Box Model */
+	grid-row: 1;
 	display: flex;
-	width: 100%;
-    height: 20%;
+	width: auto;
+    height: auto;
     padding: 0;
+    border: 0;
     border-bottom: 0.2em solid black;
     margin: 0;
     
@@ -145,10 +149,11 @@ const DisplayIdentity = styled.div`
     left: 0;
 
 	/* Display & Box Model */
-	display: inline-block;
-	vertical-align: top;
-	width: 67%;
-    height: 100%;
+	grid-column: 2 / 4;
+	display: grid;
+    grid-template-rows: repeat(5, 1fr);
+	width: auto;
+    height: auto;
     padding: 0;
     border: 0.2em solid black;
     margin: 0;
@@ -165,8 +170,7 @@ const DisplayImage = styled.img`
     height: 100%;
     padding: 0;
     border: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 0 auto;
 `;
 
 const DisplayPicture = styled.picture`
@@ -190,10 +194,9 @@ const WrapperPicture = styled.div`
     left: 0;
 
 	/* Display & Box Model */
-	display: inline-block;
-	vertical-align:top;
-	width: 33%;
-    height: 100%;
+	grid-column: 1;
+	width: auto;
+    height: auto;
     padding: 0;
     border: 0.2em solid black;
     margin: 0;
@@ -206,11 +209,14 @@ const DisplayInfo = styled.div`
     left: 0;
 
 	/* Display & Box Model */
-	width: 100%;
-    height: 50%;
-    @media only screen and (max-height: 400px) {
-        height: 100%;
+	grid-row: 1;
+	@media only screen and (max-height: 400px) {
+        grid-row: 1 / 3;
     }
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+	width: auto;
+    height: auto;
     padding: 0;
     border: 0.1em solid black;
     margin: 0;
@@ -223,8 +229,11 @@ const DisplayDetails = styled.section`
     left: 0;
 
 	/* Display & Box Model */
-	width: 100%;
-    height: 67vh;
+	grid-row: 1 / 3;
+	display: grid;
+    grid-template-rows: repeat(2, 1fr);
+	width: auto;
+    height: auto;
     padding: 0;
     border: 0;
     margin: 0;

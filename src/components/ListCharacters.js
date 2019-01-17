@@ -13,24 +13,40 @@ const DisplayCharacters = styled.div`
     left: 0;
   
     /* Display & Box Model */
-    display: inline-block;
     @media only screen and (max-width: 520px) {
         display: flex;
+        flex-direction: row;
     }
     overflow-y: auto;
     flex-wrap: wrap;
-    width: 100%;
-    height: 33vh;
-    min-height: 104px;
-    max-height: 208px;
+    width: auto;
+    height: auto;
+    min-height: 112px;
+    max-height: 212px;
     padding: 0;
     border: solid black 4px;
     margin: 0;
+    
+    /* Other */
     user-select: none;
 }
 `;
 
 const WrapperCharacters = styled.section`
+	/* Positioning */
+    position: relative;
+    top: 0;
+    left: 0;
+    
+    /* Display & Box Model */
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+    margin: 0;
 `;
 
 

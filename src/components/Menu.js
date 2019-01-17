@@ -12,8 +12,9 @@ const Main = styled.section`
     left: 0;
   
     /* Display & Box Model */
-    width: 100%;
-    height: 67vh;
+    grid-row: 1 / 3;
+    width: auto;
+    height: auto;
     padding: 0;
     border: 0;
     margin: 0;
@@ -30,8 +31,7 @@ const DisplayHomeScreen = styled.div`
     height: 100%;
     padding: 0;
     border: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 0 auto;
 
     /* Filler */
     background-size: 100% 100%;

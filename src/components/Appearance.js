@@ -15,6 +15,7 @@ const DisplayName = styled.div`
 	overflow-y: auto;
 	width: 100%;
     height: 22%;
+    padding: 0;
     padding-bottom: 1em;
     border: 0.1em solid black;
     margin: 0;
@@ -40,8 +41,7 @@ const DisplayImage = styled.img`
     height: 100%;
     padding: 0;
     border: 0.5em solid;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 0 auto;
 `;
 
 const DisplayPicture = styled.picture`
@@ -95,15 +95,14 @@ const DisplayAppearance = styled.div`
     height: 100%;
     padding: 0;
     border: 0;
-    margin-right: 1em;
-    margin-left: 1em;
+    margin: 0 1em 0 1em;
 `;
 
 
 const Appearance = ({ title, picture, urlCharacters, isComics, onClick }) => (
-	<DisplayAppearance onClick={() => onClick(urlCharacters)}>
+	<DisplayAppearance>
 		<WrapperPicture>
-			<DisplayPicture>
+			<DisplayPicture onClick={() => onClick(urlCharacters)}>
 				{/**<DisplaySource media='(max-width: 100px)'
 				 srcSet={picture}/>**/}
 				<DisplayImage src={picture} alt={title} className={isComics ? 'isComics' : 'isSeries'}/>
