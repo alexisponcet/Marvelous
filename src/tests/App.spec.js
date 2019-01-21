@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
 import { Provider } from 'react-redux';
-import { store } from './../store/storeWithFirebase';
+import { store } from '../store/store';
 import App from './../App';
 
 

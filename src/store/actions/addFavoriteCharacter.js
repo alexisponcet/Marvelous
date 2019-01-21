@@ -1,5 +1,8 @@
-/* React-Redux v1
-import { ADD_FAVORITE_CHARACTER } from './types';
+import { ADD_FAVORITE_CHARACTER } from './actionTypes';
 
-export const addFavCharacter_action = idCharacter => ({ type:
- ADD_FAVORITE_CHARACTER, id : idCharacter });*/
+export default function addFavoriteCharacter(id) {
+	return {
+		type: ADD_FAVORITE_CHARACTER,
+		index: id
+	}
+};

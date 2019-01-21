@@ -1,11 +1,11 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 import { reduxFirestore } from 'redux-firestore';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import settings from './../firebase/Settings';
-import * as firebase from 'firebase';
-import 'firebase/firestore'; // important for firestore
 import rootReducer from './reducers/rootReducer';
 
 
@@ -15,14 +15,20 @@ firebase.initializeApp(settings);
 // Initialize Firestore with timeshot firebase
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
-const initialState = {};
+const initialState = {
+	authentication: null,
+	favoriteCharacters: []
+};
+// Preconfigure firestore store
 const createStoreWithFirebase = compose(
-	reactReduxFirebase(firebase),
 	reduxFirestore(firebase),
+	applyMiddleware(reduxThunk), // allows us to write action creators that
+	// return a function instead of an action
 )(createStore);
 
+// Create firestore store
 export const store = createStoreWithFirebase(rootReducer, initialState,
-	applyMiddleware(reduxThunk));
+	composeWithDevTools());
 export const authenticationRef = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 

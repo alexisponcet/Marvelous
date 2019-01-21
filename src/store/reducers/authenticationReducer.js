@@ -1,9 +1,9 @@
-import { FETCH_USER } from './../actions/types';
+import { FETCH_USER } from './../actions/actionTypes';
 
-export default (state = false, action) => {
+export default (state = null, action) => {
 	switch (action.type) {
-	case FETCH_USER:
-		return action.payload || null;
+		case FETCH_USER:
+			return action.user;
 	default:
 		return state;
 	}

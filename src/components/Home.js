@@ -7,7 +7,9 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 import Menu from './Menu';
 import { DetailCharacterHOC } from './DetailCharacter';
 import ListCharacters from './ListCharacters';
+import SignOut from './SignOut';
 import PropTypes from 'prop-types';
+
 
 const FirstPage = styled.section`
 	/* Positioning */
@@ -17,7 +19,7 @@ const FirstPage = styled.section`
   
     /* Display & Box Model */
     display: grid;
-    grid-template-rows: repeat(2, minmax(33.3vh, 1fr)) minmax(112px, 246px);
+    grid-template-rows: repeat(2, minmax(33.3vh, 1fr)) minmax(108px, 246px);
 
     width: 100vw;
     height: 100vh;
@@ -75,26 +77,19 @@ class Home extends Component {
 						currentAppearanceLink = {currentAppearanceLink}
 						onClickCharacter={this.displayInfoCharacter}/>
 				}
+				<SignOut/>
 			</FirstPage>
 		);
 	}
 }
 export const HomeHOC = compose(
-	firestoreConnect([
-		// Load favorite characters from firestore
-		{ collection: 'favoriteCharacters'}
-	]),
 	connect((state) => ({
 		listFavCharacters: state.firestore.ordered.favoriteCharacters,
-	}))
+	})),
+	firestoreConnect([
+		// Load favorite characters from firestore
+		{
+			collection: 'favoriteCharacters'
+		}
+	])
 )(Home);
-
-
-/* React-Redux v1
-const mapStateToProps = state => {
-	return { listFavCharacters: state.listFavCharacters };
-};
-
-const Home_wrapper = connect(mapStateToProps)(Home);
-
-export default Home_wrapper;*/

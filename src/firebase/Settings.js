@@ -1,4 +1,4 @@
-export const settings = {
+const settings = {
 	apiKey: 'AIzaSyCnmPgoL94lqhMHDtgaIsGCVse11lucVrI',
 	authDomain: 'marvelous-4246b.firebaseapp.com',
 	databaseURL: 'https://marvelous-4246b.firebaseio.com',

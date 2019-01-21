@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import registerServiceWorker from './registerServiceWorker';
 
 import App from './App';
-import { store } from './store/storeWithFirebase';
+import { store } from './store/store';
 
 
 ReactDOM.render(

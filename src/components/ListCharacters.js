@@ -21,7 +21,7 @@ const DisplayCharacters = styled.div`
     flex-wrap: wrap;
     width: auto;
     height: auto;
-    min-height: 112px;
+    min-height: 108px;
     max-height: 212px;
     padding: 0;
     border: solid black 4px;

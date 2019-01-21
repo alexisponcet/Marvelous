@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import 'bootstrap-social/bootstrap-social.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { signIn, signOut } from './../store/actions/authentication';
+import { signIn } from './../store/actions/authentication';
 import PropTypes from 'prop-types';
-import styled from "styled-components";
 
 
 const Authentication = styled.main`
@@ -33,21 +33,15 @@ class SignIn extends Component {
 	};
 	
 	static propTypes = {
-		authentication: PropTypes.oneOfType([
+		isAuthenticated: PropTypes.oneOfType([
 			PropTypes.object,
 			PropTypes.bool
 		]),
-		signIn: PropTypes.func.isRequired,
-		signOut: PropTypes.func.isRequired
-	}
-
-	// Initialization : no connection
-	componentDidMount(){
-		this.props.signOut();
+		signIn: PropTypes.func.isRequired
 	}
 	
 	UNSAFE_componentWillUpdate(nextProps) {
-		if (nextProps.authentication) {
+		if (nextProps.isAuthenticated) {
 			this.context.router.history.push('/home');
 		}
 	}
@@ -64,7 +58,7 @@ class SignIn extends Component {
 }
 
 function mapStateToProps({ authentication }) {
-	return { authentication };
+	return { isAuthenticated: authentication };
 }
 
-export default connect(mapStateToProps, { signIn, signOut })(SignIn);
+export default connect(mapStateToProps, { signIn })(SignIn);

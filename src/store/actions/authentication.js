@@ -1,31 +1,31 @@
-import { authenticationRef, provider } from './../storeWithFirebase';
-import { FETCH_USER } from './types';
+import { authenticationRef, provider } from '../store';
+import { FETCH_USER } from './actionTypes';
 
 
+function authenticateUser(user) {
+	return {
+		type: FETCH_USER,
+		user: user
+	}
+};
+
+// thunk
 export const fetchUser = () => dispatch => {
 	authenticationRef.onAuthStateChanged(user => {
-		if (user) {
-			dispatch({
-				type: FETCH_USER,
-				payload: user
-			});
-		} else {
-			dispatch({
-				type: FETCH_USER,
-				payload: null
-			});
-		}
+		dispatch(authenticateUser(user));
 	});
 };
 
+// thunk
 export const signIn = () => () => {
-	authenticationRef.signInWithPopup(provider).then(result => { // eslint-disable-line no-unused-vars
+	authenticationRef.signInWithPopup(provider).then(() => {
 		// Sign-in successful.
 	}).catch(error => {
 		console.log(error);
 	});
 };
 
+// thunk
 export const signOut = () => () => {
 	authenticationRef.signOut().then(() => {
 		// Sign-out successful.

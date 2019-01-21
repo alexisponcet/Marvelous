@@ -5,7 +5,7 @@ import 'jsdom-global/register';
 import ReactTestUtils from 'react-dom/test-utils';
 import PropTypes from 'prop-types';
 
-import { store } from './../store/storeWithFirebase';
+import { store } from '../store/store';
 import { Home_HOC } from './../components/Home';
 import { Home } from './../components/Home';
 import Menu from './../components/Menu';

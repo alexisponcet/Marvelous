@@ -5,6 +5,8 @@ import { withHandlers } from 'recompose';
 import { withFirestore } from 'react-redux-firebase';
 
 import ListAppearances from './ListAppearances';
+import addFavoriteCharacter from './../store/actions/addFavoriteCharacter';
+import deleteFavoriteCharacter from '../store/actions/deleteFavoriteCharacter';
 import PropTypes from 'prop-types';
 
 
@@ -296,7 +298,6 @@ class DetailCharacter extends Component {
 	updateComicsAndSeries = (nextProps) => {
 		const { linkComics, linkSeries} = nextProps.character;
 
-
 		if (this.didComics && this.didSeries)
 			return;
 
@@ -351,12 +352,8 @@ class DetailCharacter extends Component {
 		const characterUpdated = character;
 		characterUpdated.isFavorite = !this.state.isFavorite;
 		if (!this.state.isFavorite) {
-			/* React-Redux v1 :
-			this.props.favaddFavCharacter(character.id); */
 			this.props.addFavoriteCharacter(characterUpdated);
 		} else {
-			/* React-Redux v1 :
-			this.props.removeFavCharacter(character.id);*/
 			this.props.deleteFavoriteCharacter(characterUpdated);
 		}
 
@@ -366,7 +363,7 @@ class DetailCharacter extends Component {
 	render(){
 		const { character } = this.props;
 		const { comicsAndSeries, isFavorite } = this.state;
-
+		
 		return (
 			<DisplayDetails>
 				<DisplayInfo>
@@ -404,28 +401,20 @@ class DetailCharacter extends Component {
 export const DetailCharacterHOC = compose(
 	withFirestore, // Add props.firestore
 	withHandlers({
-		addFavoriteCharacter: ({ firestore, character }) => () =>
-			firestore.set({ collection: 'favoriteCharacters', doc: character.id.toString()}, { character }),
-		deleteFavoriteCharacter: ({ firestore, character }) => () =>
+		addFavoriteCharacterIntoDB: ({ firestore, character }) => () =>
+			firestore.set({collection: 'favoriteCharacters', doc: character.id.toString()}, {character})
+		,
+		deleteFavoriteCharacterIntoDB: ({ firestore, character }) => () =>
 			firestore.delete({ collection: 'favoriteCharacters', doc: character.id.toString() })
+	}),
+	withHandlers({
+		addFavoriteCharacter: ({ character, dispatch, firestore, addFavoriteCharacterIntoDB }) => () => {
+			dispatch(addFavoriteCharacter(character.id));
+			addFavoriteCharacterIntoDB({firestore, character});
+		},
+		deleteFavoriteCharacter: ({ character, dispatch, firestore, deleteFavoriteCharacterIntoDB }) => () => {
+			dispatch(deleteFavoriteCharacter(character.id));
+			deleteFavoriteCharacterIntoDB({firestore, character});
+		},
 	})
 )(DetailCharacter);
-
-/* React-Redux v1
-import { connect } from 'react-redux';
-import { addFavCharacter_action } from './actions/addFavoriteCharacter';
-import { removeFavCharacter_action } from './actions/removeFavoriteCharacter';
-
-const mapStateToProps = state => {
-	return { listFavCharacters: state.listFavCharacters };
-};
-
-const mapDispatchToProps = dispatch => {
-	return {
-		addFavCharacter: id => dispatch(addFavCharacter_action(id)),
-		removeFavCharacter: id => dispatch(removeFavCharacter_action(id))
-	};
-};
-const DetailCharacter_wrapper =
- connect(mapStateToProps,mapDispatchToProps)(DetailCharacter);
-export default DetailCharacter_wrapper ;*/

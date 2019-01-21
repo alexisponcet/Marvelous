@@ -13,26 +13,21 @@ export default function(HomeHOC) {
 		};
 		
 		static propTypes = {
-			authenticated: PropTypes.oneOfType([
+			isAuthenticated: PropTypes.oneOfType([
 				PropTypes.object,
 				PropTypes.bool
 			])
 		};
 		
-		UNSAFE_componentWillMount() {
-			if (this.props.authenticated === null) {
-				this.context.router.history.push('/');
-			}
-		}
-		
 		UNSAFE_componentWillUpdate(nextProps) {
-			if (!nextProps.authenticated) {
+			if (nextProps.isAuthenticated === false ||
+				nextProps.isAuthenticated === null ) {
 				this.context.router.history.push('/');
 			}
 		}
 	
 		render() {
-			if (this.props.authenticated) {
+			if (this.props.isAuthenticated) {
 				return <HomeHOC {...this.props} />;
 			}
 			return null;
@@ -40,7 +35,7 @@ export default function(HomeHOC) {
 	}
 
 	function mapStateToProps(state) {
-		return { authenticated: state.authentication };
+		return { isAuthenticated: state.authentication };
 	}
 
 	return connect(mapStateToProps)(Authentication);
