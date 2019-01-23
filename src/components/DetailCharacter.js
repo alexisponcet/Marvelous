@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withHandlers } from 'recompose';
 import { withFirestore } from 'react-redux-firebase';
 
 import ListAppearances from './ListAppearances';
-import addFavoriteCharacter from './../store/actions/addFavoriteCharacter';
-import deleteFavoriteCharacter from '../store/actions/deleteFavoriteCharacter';
+import { addFavoriteCharacter, deleteFavoriteCharacter }from '../store/actions/characterActions';
+import { updateListCharactersWithSwitchFav } from '../store/actions/listCharactersActions';
 import PropTypes from 'prop-types';
 
 
@@ -244,125 +245,121 @@ const DisplayDetails = styled.section`
 
 class DetailCharacter extends Component {
 
-	didSeries;
-	didComics;
-
 	static propTypes = {
 		character: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
+			id: PropTypes.number,
+			name: PropTypes.string,
 			description: PropTypes.string,
 			picture: PropTypes.string,
 			linkComics: PropTypes.string,
 			linkSeries: PropTypes.string,
 			isFavorite: PropTypes.bool,
-		}),
-		onClickAppearance: PropTypes.func.isRequired,
+		}).isRequired,
+		listCharacters: PropTypes.objectOf(
+			PropTypes.shape({
+				id: PropTypes.number,
+				name: PropTypes.string,
+				description: PropTypes.string,
+				picture: PropTypes.string,
+				linkComics: PropTypes.string,
+				linkSeries: PropTypes.string,
+				isFavorite: PropTypes.bool,
+			})
+		).isRequired,
+		updateListCharactersWithSwitchFav: PropTypes.func.isRequired,
 		firestore: PropTypes.shape({ // from enhance (withFirestore)
 			set: PropTypes.func.isRequired,
 			delete: PropTypes.func.isRequired
 		}),
-		addFavoriteCharacter: PropTypes.func.isRequired, // from enhance
-		// (withHandlers)
-		deleteFavoriteCharacter: PropTypes.func.isRequired, // from enhance (withHandlers)
+		addFavoriteCharacter: PropTypes.func.isRequired,
+		addFavoriteCharacterIntoDB: PropTypes.func.isRequired,
+		deleteFavoriteCharacter: PropTypes.func.isRequired,
+		deleteFavoriteCharacterFromDB: PropTypes.func.isRequired,
 	};
 
 	constructor(props) {
 		super(props);
-
+		
 		this.state = {
-			isFavorite: this.props.character.isFavorite,
 			comicsAndSeries: [],
 		};
-		this.didComics = false;
-		this.didSeries = false;
 	}
 
 	componentDidMount() {
-		this.updateComicsAndSeries(this.props);
+		this.fetchComicsAndSeries(this.props);
 	}
 	
 	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (this.props.character.id !== nextProps.character.id &&
-			this.props.character.id !== 0) {
-			this.setState({
-				isFavorite: nextProps.character.isFavorite,
-				comicsAndSeries: [],
-			});
-			this.didComics = false;
-			this.didSeries = false;
-		}
-		this.updateComicsAndSeries(nextProps);
-	}
-
-	updateComicsAndSeries = (nextProps) => {
-		const { linkComics, linkSeries} = nextProps.character;
-
-		if (this.didComics && this.didSeries)
-			return;
-
-		if (!this.didComics) {
-			this.didComics = true;
-			this.callAPIMarvel(linkComics, true);
-		}
-
-		if (!this.didSeries) {
-			this.didSeries = true;
-			this.callAPIMarvel(linkSeries, false);
+		if (nextProps.character.id !== this.props.character.id) {
+			this.setState({ comicsAndSeries: [] });
+			this.fetchComicsAndSeries(nextProps);
 		}
 	}
+	
+	shouldComponentUpdate(nextProps, nextState) {
+		if (nextProps.character.id !== this.props.character.id ||
+			nextProps.character.isFavorite !== this.props.character.isFavorite ||
+			nextState.comicsAndSeries !== this.state.comicsAndSeries) {
+			return true;
+		}
+		return false;
+	}
 
-	callAPIMarvel = (url, isComics) => {
+	fetchComicsAndSeries = async (nextProps) => {
+		const { linkComics, linkSeries } = nextProps.character;
+		
+		await Promise.all([this.callAPIMarvel(linkComics), this.callAPIMarvel(linkSeries)]).then(results => {
+			this.composeFormattedComicsAndSeries([...results[0], ...results[1]]);
+		});
+	}
+	
+	callAPIMarvel = async (url) => {
 		window.document.body.style.cursor = 'wait';
-		fetch(`${url}?apikey=${process.env.REACT_APP_MARVEL_API_KEY}`, {
-			method: 'GET',
-			headers: {
-				'Accept-encoding': 'gzip',
-			}
-		})
-			.then(result => result.json())
-			.then(
-				(result) => {
-					window.document.body.style.cursor = 'default';
-					this.getComicsOrSeries(result.data.results, isComics);
-				},
-				(error) => {
-					window.document.body.style.cursor = 'default';
-					alert('Error while getting marvel series data : ' + error);
-				});
+		try {
+			const response = await fetch(`${url}?apikey=${process.env.REACT_APP_MARVEL_API_KEY}`, {
+				method: 'GET',
+				headers: {
+					'Accept-encoding': 'gzip',
+				}
+			});
+			if (!response.ok)
+				throw Error(response.statusText);
+			const result = await response.json();
+			return result.data.results;
+		} catch (error) {
+			alert('Error while getting marvel series data : ' + error);
+		} finally {
+			window.document.body.style.cursor = 'default';
+		}
 	}
-
-	getComicsOrSeries = (data, isComics) => {
-		let listComicsAndSeries = data.map(comicsOrSerie => {
+	
+	composeFormattedComicsAndSeries = (data) => {
+		let formattedComicsAndSeries = data.map(comicsOrSerie => {
 			return {
 				id : comicsOrSerie.id,
 				title : comicsOrSerie.title,
 				picture : comicsOrSerie.thumbnail.path + '.' +
 					comicsOrSerie.thumbnail.extension,
-				urlCharacters: comicsOrSerie.characters.collectionURI,
-				isComics: isComics,
+				urlDisplayCharacters: comicsOrSerie.characters.collectionURI,
+				isComics: comicsOrSerie.hasOwnProperty('comics'),
 			};
 		});
-		this.setState(prevState => ({ comicsAndSeries: [...prevState.comicsAndSeries, ...listComicsAndSeries]}));
+		this.setState({ comicsAndSeries: formattedComicsAndSeries });
 	}
 
 	changeFavorite = () => {
-		const { character } = this.props;
-
-		const characterUpdated = character;
-		characterUpdated.isFavorite = !this.state.isFavorite;
-		if (!this.state.isFavorite) {
-			this.props.addFavoriteCharacter(characterUpdated);
+		const { character, addFavoriteCharacter, deleteFavoriteCharacter } = this.props;
+		
+		if (!character.isFavorite) {
+			addFavoriteCharacter();
 		} else {
-			this.props.deleteFavoriteCharacter(characterUpdated);
+			deleteFavoriteCharacter();
 		}
-
-		this.setState({ isFavorite : !this.state.isFavorite});
 	}
 
 	render(){
 		const { character } = this.props;
-		const { comicsAndSeries, isFavorite } = this.state;
+		const { comicsAndSeries } = this.state;
 		
 		return (
 			<DisplayDetails>
@@ -378,7 +375,7 @@ class DetailCharacter extends Component {
 						<WrapperName>
 							<DisplayName>
 								<span>{character.name}</span>
-								<span className={isFavorite ? 'isFavorite' : 'notFavorite'} onClick={this.changeFavorite}>★</span>
+								<span className={character.isFavorite ? 'isFavorite' : 'notFavorite'} onClick={this.changeFavorite}>★</span>
 							</DisplayName>
 						</WrapperName>
 						<DisplayDescription>
@@ -390,7 +387,6 @@ class DetailCharacter extends Component {
 					<WrapperListAppearances>
 						<ListAppearances
 							appearances={comicsAndSeries}
-							onClickAppearance={this.props.onClickAppearance}
 						/>
 					</WrapperListAppearances>
 				</DisplayAppearances>
@@ -398,23 +394,31 @@ class DetailCharacter extends Component {
 		);
 	}
 }
-export const DetailCharacterHOC = compose(
+const DetailCharacterHOC = compose(
+	connect((state) => ({
+		character: state.character,
+		listCharacters: state.appearance.listCharacters
+	}), { updateListCharactersWithSwitchFav }),
 	withFirestore, // Add props.firestore
 	withHandlers({
 		addFavoriteCharacterIntoDB: ({ firestore, character }) => () =>
-			firestore.set({collection: 'favoriteCharacters', doc: character.id.toString()}, {character})
-		,
-		deleteFavoriteCharacterIntoDB: ({ firestore, character }) => () =>
+			firestore.set({collection: 'favoriteCharacters', doc: character.id.toString()}, {...character, isFavorite: true}),
+		deleteFavoriteCharacterFromDB: ({ firestore, character }) => () =>
 			firestore.delete({ collection: 'favoriteCharacters', doc: character.id.toString() })
 	}),
 	withHandlers({
-		addFavoriteCharacter: ({ character, dispatch, firestore, addFavoriteCharacterIntoDB }) => () => {
-			dispatch(addFavoriteCharacter(character.id));
+		addFavoriteCharacter: ({ character, listCharacters, updateListCharactersWithSwitchFav,
+			dispatch, firestore, addFavoriteCharacterIntoDB }) => () => {
+			dispatch(addFavoriteCharacter(character));
 			addFavoriteCharacterIntoDB({firestore, character});
+			updateListCharactersWithSwitchFav(listCharacters, firestore.get({ collection: 'favoriteCharacters'}));
 		},
-		deleteFavoriteCharacter: ({ character, dispatch, firestore, deleteFavoriteCharacterIntoDB }) => () => {
-			dispatch(deleteFavoriteCharacter(character.id));
-			deleteFavoriteCharacterIntoDB({firestore, character});
+		deleteFavoriteCharacter: ({ character, listCharacters, updateListCharactersWithSwitchFav,
+			dispatch, firestore, deleteFavoriteCharacterFromDB }) => () => {
+			dispatch(deleteFavoriteCharacter(character));
+			deleteFavoriteCharacterFromDB({firestore, character});
+			updateListCharactersWithSwitchFav(listCharacters, firestore.get({ collection: 'favoriteCharacters'}));
 		},
 	})
 )(DetailCharacter);
+export default DetailCharacterHOC;

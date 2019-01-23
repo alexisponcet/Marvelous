@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
+import { displayInfoCharacter } from '../store/actions/characterActions';
 import PropTypes from 'prop-types';
 
 
@@ -102,8 +104,8 @@ const DisplayCharacter = styled.div`
 `;
 
 
-const SmallCharacter = ({ character, onClick }) => (
-	<DisplayCharacter onClick={() => onClick(character)} >
+const SmallCharacter = ({ character, onCharacterClick }) => (
+	<DisplayCharacter  onClick={() => onCharacterClick(character)}>
 		<DisplayPicture>
 			{/**<DisplaySource media='(max-width: 100px)' srcSet={picture}/>**/}
 			<DisplayImage src={character.picture} alt={character.name} />
@@ -113,7 +115,6 @@ const SmallCharacter = ({ character, onClick }) => (
 		</DisplayPicture>
 	</DisplayCharacter>
 );
-
 
 SmallCharacter.propTypes = {
 	character: PropTypes.shape({
@@ -125,6 +126,14 @@ SmallCharacter.propTypes = {
 		linkSeries: PropTypes.string,
 		isFavorite: PropTypes.bool,
 	}),
-	onClick: PropTypes.func.isRequired,
+	onCharacterClick: PropTypes.func.isRequired
 };
-export default SmallCharacter;
+
+const mapDispatchToProps = dispatch => {
+	return {
+		onCharacterClick: (character) => {
+			dispatch(displayInfoCharacter(character));
+		}
+	};
+};
+export default connect(null, mapDispatchToProps)(SmallCharacter);

@@ -9,14 +9,13 @@ function authenticateUser(user) {
 	}
 };
 
-// thunk
+// Thunks
 export const fetchUser = () => dispatch => {
 	authenticationRef.onAuthStateChanged(user => {
 		dispatch(authenticateUser(user));
 	});
 };
 
-// thunk
 export const signIn = () => () => {
 	authenticationRef.signInWithPopup(provider).then(() => {
 		// Sign-in successful.
@@ -25,7 +24,6 @@ export const signIn = () => () => {
 	});
 };
 
-// thunk
 export const signOut = () => () => {
 	authenticationRef.signOut().then(() => {
 		// Sign-out successful.

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
+import switchAppearance from '../store/actions/appearanceActions';
 import PropTypes from 'prop-types';
 
 
@@ -99,26 +101,37 @@ const DisplayAppearance = styled.div`
 `;
 
 
-const Appearance = ({ title, picture, urlCharacters, isComics, onClick }) => (
+const Appearance = ({ appearance, onAppearanceClick}) => (
 	<DisplayAppearance>
 		<WrapperPicture>
-			<DisplayPicture onClick={() => onClick(urlCharacters)}>
+			<DisplayPicture onClick={() => onAppearanceClick(appearance.id, appearance.urlDisplayCharacters)}>
 				{/**<DisplaySource media='(max-width: 100px)'
 				 srcSet={picture}/>**/}
-				<DisplayImage src={picture} alt={title} className={isComics ? 'isComics' : 'isSeries'}/>
+				<DisplayImage src={appearance.picture} alt={appearance.title} className={appearance.isComics ? 'isComics' : 'isSeries'}/>
 			</DisplayPicture>
 		</WrapperPicture>
 		<DisplayName>
-			<span>{title}</span>
+			<span>{appearance.title}</span>
 		</DisplayName>
 	</DisplayAppearance>
 );
 
 Appearance.propTypes = {
-	title: PropTypes.string.isRequired,
-	picture: PropTypes.string,
-	urlCharacters: PropTypes.string,
-	isComics: PropTypes.bool,
-	onClick: PropTypes.func.isRequired,
+	appearance : PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		title: PropTypes.string.isRequired,
+		picture: PropTypes.string,
+		urlDisplayCharacters: PropTypes.string,
+		isComics: PropTypes.bool,
+	}),
+	onAppearanceClick: PropTypes.func.isRequired
 };
-export default Appearance;
+
+const mapDispatchToProps = dispatch => {
+	return {
+		onAppearanceClick: (id, url) => {
+			dispatch(switchAppearance(id, url));
+		}
+	};
+};
+export default connect(null, mapDispatchToProps)(Appearance);

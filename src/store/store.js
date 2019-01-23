@@ -16,8 +16,15 @@ firebase.initializeApp(settings);
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
 const initialState = {
-	authentication: null,
-	favoriteCharacters: []
+	firestore: {},
+	authentication: {},
+	character: {},
+	appearance: {
+		id: 0,
+		url: '',
+		listCharacters: {},
+		listCharactersWithFilter: [],
+	},
 };
 // Preconfigure firestore store
 const createStoreWithFirebase = compose(
@@ -49,6 +56,5 @@ const persistConfig = {
 }
 
 const persistedfavCharacterReducer = persistReducer(persistConfig, favCharactersReducer);
-
 export const store = createStore(persistedfavCharacterReducer);
 export const persistor = persistStore(store); */

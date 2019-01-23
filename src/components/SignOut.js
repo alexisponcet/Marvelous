@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
+import { signOut } from '../store/actions/authenticationActions';
 import 'bootstrap-social/bootstrap-social.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { signOut } from './../store/actions/authentication';
 import PropTypes from 'prop-types';
 
 
@@ -42,5 +42,4 @@ class SignOut extends Component {
 		);
 	}
 }
-
 export default connect(null, { signOut })(SignOut);

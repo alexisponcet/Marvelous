@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 
 import Menu from './Menu';
-import { DetailCharacterHOC } from './DetailCharacter';
+import DetailCharacterHOC from './DetailCharacter';
 import ListCharacters from './ListCharacters';
 import SignOut from './SignOut';
+import { fetchCharacters } from '../store/actions/listCharactersActions';
 import PropTypes from 'prop-types';
 
 
@@ -32,64 +33,81 @@ const FirstPage = styled.section`
 class Home extends Component {
 
 	static propTypes = {
-		listFavCharacters: PropTypes.array,
+		character: PropTypes.shape({
+			id: PropTypes.number,
+			name: PropTypes.string,
+			description: PropTypes.string,
+			picture: PropTypes.string,
+			linkComics: PropTypes.string,
+			linkSeries: PropTypes.string,
+			isFavorite: PropTypes.bool,
+		}).isRequired,
+		appearanceID: PropTypes.number.isRequired,
+		appearanceURL: PropTypes.string.isRequired,
+		listFavCharacters: PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.number,
+				name: PropTypes.string,
+				description: PropTypes.string,
+				picture: PropTypes.string,
+				linkComics: PropTypes.string,
+				linkSeries: PropTypes.string,
+				isFavorite: PropTypes.bool,
+			})
+		),
+		fetchCharacters: PropTypes.func.isRequired
 	};
 
-	URL_CHARACTERS = 'http://gateway.marvel.com/v1/public/characters';
-
-	constructor(props){
-		super(props);
-
-		this.state = {
-			currentCharacter: {},
-			currentAppearanceLink: this.URL_CHARACTERS,
-		};
+	static URL_CHARACTERS = 'http://gateway.marvel.com/v1/public/characters';
+	
+	UNSAFE_componentWillReceiveProps(nextProps){
+		if (nextProps.appearanceID !== this.props.appearanceID) {
+			this.props.fetchCharacters(nextProps.appearanceURL, nextProps.listFavCharacters);
+		} else if ((typeof this.props.listFavCharacters === 'undefined' &&
+			typeof nextProps.listFavCharacters !== 'undefined')) {
+			this.props.fetchCharacters(Home.URL_CHARACTERS, nextProps.listFavCharacters);
+		}
 	}
-
-	displayInfoAppearance = (newAppearanceLink) => {
-		// Display the characters associated to the new appearance
-		this.setState({ currentAppearanceLink : newAppearanceLink});
-	}
-
-	displayInfoCharacter = (currentCharacter) => {
-		this.setState({ currentCharacter : currentCharacter });
+	
+	shouldComponentUpdate(nextProps) {
+		if ((typeof this.props.listFavCharacters === 'undefined' &&
+			typeof nextProps.listFavCharacters !== 'undefined') ||
+			(Object.keys(this.props.character).length === 0 &&
+				Object.keys(nextProps.character).length !== 0)) {
+			return true;
+		}
+		return false;
 	}
 
 	render() {
-		const { listFavCharacters } = this.props;
-		const { currentCharacter, currentAppearanceLink } = this.state;
-		const notSelected = (Object.keys(currentCharacter).length === 0 && currentCharacter.constructor === Object);
+		const { character, listFavCharacters } = this.props;
+		const notSelected = (Object.keys(character).length === 0);
 
 		return (
 			<FirstPage>
 				{ notSelected
 					? <Menu/>
-					: <DetailCharacterHOC
-						character={currentCharacter}
-						onClickAppearance={this.displayInfoAppearance}
-					/>
+					: <DetailCharacterHOC/>
 				}
 
 				{ isLoaded(listFavCharacters)
 					&&
-					<ListCharacters listFavCharacters = {listFavCharacters}
-						currentCharacter = {currentCharacter}
-						currentAppearanceLink = {currentAppearanceLink}
-						onClickCharacter={this.displayInfoCharacter}/>
+					<ListCharacters/>
 				}
 				<SignOut/>
 			</FirstPage>
 		);
 	}
 }
-export const HomeHOC = compose(
+const HomeHOC = compose(
 	connect((state) => ({
-		listFavCharacters: state.firestore.ordered.favoriteCharacters,
-	})),
-	firestoreConnect([
-		// Load favorite characters from firestore
-		{
-			collection: 'favoriteCharacters'
-		}
-	])
+		character: state.character,
+		appearanceID: state.appearance.id,
+		appearanceURL: state.appearance.url,
+		listFavCharacters: state.firestore.ordered.favoriteCharacters
+	}), { fetchCharacters }),
+	firestoreConnect([{
+		collection: 'favoriteCharacters' // Load favorite characters from firestore
+	}])
 )(Home);
+export default HomeHOC;

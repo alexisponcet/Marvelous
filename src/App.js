@@ -3,10 +3,10 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 
+import HomeHOC from './components/Home';
 import SignIn from './components/SignIn';
 import requireAuthentication from './authentication/requireAuthentication';
-import { HomeHOC } from './components/Home';
-import { fetchUser } from './store/actions/authentication';
+import { fetchUser } from './store/actions/authenticationActions';
 import PropTypes from 'prop-types';
 
 

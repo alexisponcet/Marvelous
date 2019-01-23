@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
+import { signIn } from '../store/actions/authenticationActions';
 import 'bootstrap-social/bootstrap-social.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { signIn } from './../store/actions/authentication';
 import PropTypes from 'prop-types';
 
 
@@ -57,8 +57,9 @@ class SignIn extends Component {
 	}
 }
 
-function mapStateToProps({ authentication }) {
-	return { isAuthenticated: authentication };
-}
-
+const mapStateToProps = state => {
+	return {
+		isAuthenticated: state.authentication
+	};
+};
 export default connect(mapStateToProps, { signIn })(SignIn);

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Scrollbars } from 'react-custom-scrollbars';
 import Appearance from './Appearance';
+import { Scrollbars } from 'react-custom-scrollbars';
 import PropTypes from 'prop-types';
 
 
-const ListAppearances = ({ appearances, onClickAppearance }) => (
+const ListAppearances = ({ appearances }) => (
 	<Scrollbars style={{
 		'position': 'relative',
 		'top': '0',
@@ -22,11 +22,7 @@ const ListAppearances = ({ appearances, onClickAppearance }) => (
 		{
 			appearances.map(appearance =>
 				<Appearance
-					title={appearance.title}
-					picture={appearance.picture}
-					urlCharacters={appearance.urlCharacters}
-					isComics={appearance.isComics}
-					onClick={onClickAppearance}
+					appearance={appearance}
 					key={appearance.id}
 				/>
 			)
@@ -40,11 +36,11 @@ ListAppearances.propTypes = {
 			id: PropTypes.number.isRequired,
 			title: PropTypes.string.isRequired,
 			picture: PropTypes.string,
-			urlCharacters: PropTypes.string,
+			urlDisplayCharacters: PropTypes.string,
 			isComics: PropTypes.bool,
 		})
 	),
-	onClickAppearance: PropTypes.func.isRequired,
 	style: PropTypes.object
 };
+
 export default ListAppearances;
